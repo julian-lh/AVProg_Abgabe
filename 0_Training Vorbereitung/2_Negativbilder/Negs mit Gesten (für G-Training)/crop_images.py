@@ -1,3 +1,6 @@
+# This script crops images into a desired size, converts them into a grayscale image and exports them as jpg image.
+# Cropping happens towards the center of the input image.
+# AV-Programmieren, Medientechnik, Wintersemester 2019/2020, Julian Lopes Hinz & Lina Tiedemann.
 import cv2
 import numpy as np
 import glob
@@ -5,39 +8,28 @@ import os
 import sys
 from os.path import basename
 
-imgPath = "./inputV"
-imgPathOut = "./neg6"
-resizeDimH = 100
-resizeDimB = 100
-newFileNameBase= ''
-counter = 1400
-amount = 700      #if all in directory then write 0
-digits = 0        #length of number of digits being filled with leading zeros
+imgPathIn = "./input"
+imgPathOut = "./output"
+resizeDimH = 50
+resizeDimB = 50
+newFileNameBase= "v"
+counter = 0
+digits = 0        #total length of consecutive number (filled with leading zeros)
 
-# Check for images
-'''
-if len(list(glob.iglob('%s/*.jpg' % imgPath))) == 0:
-    print 'Could not find any images in path "%s".' % (imgPath)
-    sys.exit(2)
-'''
+
+# Check for directory
 if not os.path.exists(imgPathOut):
     os.makedirs(imgPathOut)
 
-maxNr = counter + amount
-for filename in glob.iglob('%s/*.jpg' % imgPath):
+for filename in glob.iglob("%s/*.jpg" % imgPathIn):
 
     counter += 1
-
-    if counter == (maxNr+1) and amount != 0:
-        break
-
     # Read image
     imgOriginal = cv2.imread(filename)
 
     # Get shortest imagesize
     size = imgOriginal.shape[0:2]
     sqrSize = np.amin(size)
-    #print('kleinste Seite: ',sqrSize)
 
     # Crop center
     startH = int((size[0]-sqrSize)/2)
@@ -52,18 +44,11 @@ for filename in glob.iglob('%s/*.jpg' % imgPath):
     # Convert to grayscale
     img = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
 
-
     # Write image
     imgIndx = str(counter).zfill(digits)
     imgName = newFileNameBase + imgIndx + ".jpg"
     cv2.imwrite('%s/%s' % (imgPathOut, imgName), img)
 
-    print("\r\rGecropte Bilder: %i\r" % (counter))
-    #print '%s/%s' % (imgPath, imgName)
-print('CROPPING BEENDET')
+    print("\r\rCropped Images: %i\r" % (counter))
 
-
-#cv2.imshow("Beispiel", img)
-
-#cv2.waitKey(0) #hält Programmablauf an, bis irgendeine Taste (0) gedrück wird
-#cv2.destroyAllWindows() #schließt alle Fenster
+print("FINISHED CROPPING")
