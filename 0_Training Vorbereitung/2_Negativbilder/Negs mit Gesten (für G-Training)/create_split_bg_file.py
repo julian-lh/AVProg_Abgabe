@@ -1,6 +1,8 @@
+# Creates "background-file" for Haar Cascade Training to locate background images.
+# it also creates three shorter "backgound-file" for the "opencv_createsamples" function.
+# AV-Programmieren, Medientechnik, Wintersemester 2019/2020, Julian Lopes Hinz & Lina Tiedemann.
+
 import urllib.request
-import cv2
-import numpy as np
 import os
 
 cnt = 0
